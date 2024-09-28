@@ -1,0 +1,1029 @@
+//////////////////////////////////////////////////////////////////
+//Arduino Uno 328 P placa sozinha não tem Led, ou seja, código só que devolve serial monitor com o mesmo esquema que linguagem C
+//////////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////
+// Ficha Prática 1 - Revisões
+/////////////////////////////////////////////////
+/////////////////////////////////////////////////
+// Eduardo Miguel Moreira Junqueira nº30241 ERSC 
+/////////////////////////////////////////////////
+/////////////////////////////////////////////////
+// 2-Exercícios-Ex1:https://www.tinkercad.com/things/iPwF9yM1WL6-copy-of-fp1-embedded-c-programming/editel?sharecode=ilUsPA-KhGh5f7iin4xR8V1Ch_A6xFcKX83N6QsFB_4
+/////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////
+//Ex1:
+//Exercício 1 Implemente um programa que teste se um número inteiro, introduzido pelo utilizador, é positivo ou negativo e apresente o resultado na consola.
+//////////////////////////////////////////////////////////////////
+
+int num;
+
+//////////////////////////////////////////////////////////////////
+//Função Setup - Inicialização  é invocada quando o micro-controlador inicia
+// A função setup() é executada apenas uma vez, após a placa ser alimentada ou ser feito um reset.
+//////////////////////////////////////////////////////////////////
+void setup(){
+Serial.begin(9600);
+Serial.println("In setup fuction");
+Serial.println("Digite um numero inteiro : ");
+Serial.println("Final setup fuction");
+
+}
+
+///////////////////////////////////////////////////////////////////
+//Função Loop -- Loop de Controlo repete-se consecutivamente enquanto o micro-controlador estiver ligado permitindo que o programa em execução produza as saídas pretendidas.
+//////////////////////////////////////////////////////////////////
+
+void loop(){
+//Ler o número inserido pelo utilizador neste caso é inteiro,ou seja, parseInt();
+
+///////////////////////////////////////////////////////////////////
+// As funções Serial são usadas para estabelecer comunicação entre o
+//microcontrolador e um computador ou outros dispositivos através da porta série (também conhecida como UART ou USART). Poderá encontrar mais informações sobre estas funções na página do Arduino.
+///////////////////////////////////////////////////////////////////
+
+//Ler um numero!
+num= Serial.parseInt();
+
+//verificar se o número é positivo ou negativo:
+if(num > 0){
+Serial.print("O numero: ");//Serial.print fica na mesma linha
+Serial.print(num);
+Serial.println(" e positivo.");//Serial.println muda de linha; 
+Serial.println("Digite um numero inteiro: ");
+}
+if (num < 0){
+Serial.print("O numero: ");//Serial.print fica na mesma linha
+Serial.print(num);
+Serial.println("e negativo");//Serial.println muda de linha;
+//Pedir um novo número
+Serial.println("Digite um numero inteiro: ");
+}
+}
+//----------------------------------------------------------------------
+
+/////////////////////////////////////////////////
+// Ficha Prática 1 - Revisões
+/////////////////////////////////////////////////
+/////////////////////////////////////////////////
+// Eduardo Miguel Moreira Junqueira nº30241 ERSC 
+/////////////////////////////////////////////////
+/////////////////////////////////////////////////
+// 2-Exercícios-Ex2:https://www.tinkercad.com/things/gNFp0JgFRG5-ficha-1-ex2/editel?sharecode=5wzt0IISJ8kSW78AllKlikmynKeDk-WP94AaumuBNTM
+/////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////
+//Ex2:Exercício 2 Implemente um programa que exiba na consola a tabuada dos N, onde N é um inteiro entre 1 e 10 introduzido pelo utilizador.
+///////////////////////////////////////////////////////////////
+
+///////////////////////////////////////////////////////////////
+//Ex2:Exercício 2 Implemente um programa que exiba na consola a tabuada dos N, onde N é um inteiro entre 1 e 10 introduzido pelo utilizador.
+///////////////////////////////////////////////////////////////
+
+int N;
+//////////////////////////////////////////////////////////////
+//Função ler Tabuada Exibir a multiplicação de N por valores de 1 a 10
+//////////////////////////////////////////////////////////////
+void Tabuada(){
+/////////////////////////////////////////////////////
+//Neste caso em concreto, temos o i que vai de 1 a 10 onde o mesmo é representado pelos valores da tabuada e o N  é o valor fixo da tabuada;
+///////////////////////////////////////////////////////
+
+for(int i= 1; i<= 10; i++){
+Serial.print(N);
+Serial.print(" x ");
+Serial.print(i);
+Serial.print(" = ");
+Serial.print(N * i);
+}
+Serial.println();//Adiciona uma linha em branco ao final da tabuada
+}
+///////////////////////////////////
+//Função Setup()  inicialização
+//////////////////////////////////
+void setup(){
+Serial.begin(9600);
+Serial.println("In setup fiction");
+Serial.println("Digite um numero inteiro entre 1 e 10: ");
+}
+
+/////////////////////////////////
+//Função Loop() Loop de controlo
+////////////////////////////////
+
+void loop(){
+// Verificar se há dados disponíveis para ler
+if(Serial.available() > 0){
+
+//Ler o número inserido pelo utilizador 
+N = Serial.parseInt();
+
+//Mostrar o número inserido pelo utilizador
+Serial.println(N);
+
+if(N >= 1 && N<= 10){ 
+//Exibir a tabuado de 1 a 10 
+Serial.print("Tabuada dos : ");
+//Mostrar o número inserido pelo utilizador
+Serial.println(N);
+ Tabuada();
+}
+
+//Pedir um novo número para voltar a fazer o Loop
+Serial.println("Digite outro numero inteiro entre 1 e 10:");
+}else{
+//Se o número estiver fora do intervalo entre 1 a 10 ele vai voltar a retornar 
+Serial.print("O numero inserido: ");
+Serial.print(N);
+Serial.println("É inválido!");
+Serial.println("porfavor insira outro número dentro do intervalo 1 a 10! Obrigado");
+}
+}
+//----------------------------------------------------------------------
+
+/////////////////////////////////////////////////
+// Ficha Prática 1 - Revisões
+/////////////////////////////////////////////////
+
+/////////////////////////////////////////////////
+// Eduardo Miguel Moreira Junqueira nº30241 ERSC 
+/////////////////////////////////////////////////
+
+/////////////////////////////////////////////////
+// 2-Exercícios-Ex3:https://www.tinkercad.com/things/iSirJYlf4KW-copy-of-fp1-embedded-c-programming/editel?sharecode=Oc2NA7kNZvcklXfzN8I7QKBo2p6MFXL_SN1C_soZfkY
+/////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////
+//Ex3:Exercício 3 Implemente um programa que permita introduzir uma sequência de N números e imprima os mesmos números na consola pela ordem inversa da que foram introduzidos.
+//Aqui eu tenho de pedir ao utlizador para escolher um determinado numero para a escolha da sua sequência para que a emsma não execda o mássimo do default feito pelo programador, visto que estamos a trabalhar num arduino e então o mesmo têm pouca capacidade de armazenamento, lo0go neste caso temos de ver qual é a melhor solução para o mínimo de armazemanemto de um array 
+////////////////////////////////////////////////////////
+//Variável para ler a quantidade de números que o utilizador deseja inserir! 
+int N;
+char numeros[10]; // Array para armazenar digitos (max 10) defenido por mim o máx
+bool prontoParaLer = false; //Controlo para saber quando iniciar a lçeitura dos digitos
+int cnt=0;//contador para contar os elementos e encrementar os mesmos na ordem inversa!
+
+////////////////////////////////////////////////////
+//Função ordem inversa de numeros introduzidos
+///////////////////////////////////////////////////
+//////////////////////////////////////////////////
+//Função void não retorna nada aqui só faz a operação e depois é chamada no loop!
+//Além disso, perguntas sobre o comportamento das funções void. De fato, funções com o tipo void não retornam valores, mas isso não significa que elas não possam realizar ações, como modificar variáveis globais, imprimir no serial, ou executar outras operações. No teu caso, a função inversa() não precisa retornar nada, porque a sua função é imprimir a sequência na ordem inversa diretamente na consola serial.
+//////////////////////////////////////////////////
+void inversa() {
+    // Se todos os dígitos foram lidos, imprimir a sequência inversa
+    if (cnt == N) {
+        Serial.println("Sequencia na ordem inversa:");
+        for (int i = N - 1; i >= 0; i--) {
+            Serial.print(numeros[i]);
+        }
+        Serial.println();  // Nova linha após a sequência
+
+        // Após imprimir, reiniciar o processo
+        Serial.println("Digite quantos numeros deseja inserir (max 10):");
+        prontoParaLer = false; // Reseta para permitir nova leitura
+    }
+}
+
+////////////////////////////////////////////////////
+//Função Setup ()
+///////////////////////////////////////////////////
+void setup(){
+//Começa aqui 1:
+Serial.begin(9600);
+Serial.println("In setup fuction! ");
+Serial.println("Porfavor insira a quantidade de numeros inteiros que deseja inserir na sua sequencia, max:10 numeros: ");
+
+}
+
+
+//////////////////////////////////////////////////
+//Função Loop ()
+/////////////////////////////////////////////////
+void loop(){
+//Passa Para aqui 2:
+//caso ainda não tenha recebido o valor de N, aguarda e processa a entrada
+if (!prontoParaLer){
+if(Serial.available() > 0){
+//Ler o número de array que o utilizador quer usar!:
+N = Serial.parseInt();
+
+
+//Passa para aqui 3:
+//Verifica se N está dentro do intervalo preconfigurado por mim:
+if(N > 0 && N <= 10){
+prontoParaLer = true; //Inicia a leitura dos digitos
+Serial.print("Escolheu para a sua sequencia um array de: ");
+Serial.print(N);
+Serial.println("numeros inteiros");
+Serial.println("Insira a sequencia então deacordo com o numero de arrays defenidos: ");
+cnt = 0; //Reiniciar o contador 
+}
+}
+}
+//Passa para aqui 4:
+//Se ProntoParaLer =true
+else
+{//Lê os digitos e os armazena no array
+if (Serial.available()> 0 && cnt < N) {
+char c = Serial.read(); // Lê o próximo caracter inserido
+//Passa para aqui 5:
+//Verifica se o caracter é um dnumero inteiro válido entre 0-9
+if(c>= '0' && c <= '9'){
+numeros[cnt] = c; //Armazenar o numero do array
+Serial.print("Numero");
+Serial.print(cnt +1);
+Serial.print(": ");
+Serial.println(c);
+cnt++;
+}
+}
+inversa();
+}
+}
+//----------------------------------------------------------------------
+
+/////////////////////////////////////////////////
+// Ficha Prática 1 - Revisões
+/////////////////////////////////////////////////
+
+/////////////////////////////////////////////////
+// Eduardo Miguel Moreira Junqueira nº30241 ERSC 
+/////////////////////////////////////////////////
+
+/////////////////////////////////////////////////
+// 2-Exercícios-Ex4:https://www.tinkercad.com/things/dDPJyIWMH4Y-ficha-1-ex-4/editel?sharecode=5j-4JRxuzIJBkllKdEUQ8oypj0jMmdWOiTU8cdnjNyg
+/////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////
+//EX:4
+//Exercício 4 Implemente um programa que a partir de um array contendo valores reais imprima na consola: o maior elemento do array, o menor elemento do array, o valor médio dos elementos do array. Defina o array do seguinte modo:
+//float arr[]={3.0,5.2,7.4,2.5,3.6,8.2,1.1,7.8,4.5,2.2,7.0};
+//////////////////////////////////////////////////////////////////
+
+////////////////////////////
+//Defenir variáveis
+///////////////////////////
+float arr[]={3.0,5.2,7.4,2.5,3.6,8.2,1.1,7.8,4.5,2.2,7.0};
+////////////////////////////////////////////
+//sizeof(arr) retorna o tamanho total do array em bytes. Se, por exemplo, arr é um array de 10 inteiros e cada inteiro ocupa 4 bytes, então sizeof(arr) vai retornar 10 * 4 = 40 bytes.
+//sizeof(arr[0]) retorna o tamanho do primeiro elemento do array, 
+/////////////////////
+
+int n = sizeof(arr) / sizeof(arr[0]);//Para calcular o número de elementos no array, divide-se o tamanho total do array (sizeof(arr)) pelo tamanho de um único elemento (sizeof(arr[0])). Isso dá o número de elementos no array.
+
+//Variáveis para calculo do array:
+//Nota todas as variáveis têm de ser defenidas aqui para evitar que as mesmas não sejam lifda no código global, ou seja, não posso defenir variáveis dentro de loop ou setup ou void, neste caso dentro de uma função void não posso defenir vatriáveis elas têm deb ser defenidas fora das funções, com execeção do int i que é feito dentro de um ficlo for e só está dentro desse ciclo ou seja variáveis de um ciclo são aceites também.
+float maior;
+float  menor;
+float media;
+float soma= 0;
+
+
+/////////////////////////
+//Defenir funções do tipo void
+////////////////////////
+
+////////////////////////
+//Função void Print
+////////////////////////
+
+void print(){
+Serial.println("O maior elemento do array(3.0, 5.2, 7.4, 2.5, 3.6, 8.2, 1.1, 7.8, 4.5, 2.2, 7.0) =  ");
+Serial.print(maior);
+Serial.println("O menor elemnto do array(3.0, 5.2, 7.4, 2.5, 3.6, 8.2, 1.1, 7.8, 4.5, 2.2, 7.0)= ");
+Serial.print(menor);
+Serial.println("O valor médio do array (3.0, 5.2, 7.4, 2.5, 3.6, 8.2, 1.1, 7.8, 4.5, 2.2, 7.0)= ");
+Serial.print(media);
+delay(5000);
+
+}
+///////////////////////
+//Função Setup Inicialização:
+//////////////////////
+
+void setup(){
+Serial.begin(9600);
+Serial.println("In setup Fuction!");
+}
+
+
+
+
+//////////////////////
+//Função Loop do Código -->Tenho de ter em atenção a esta função, pois a mesma está sempre em loop e tudo que ponho em print tem de esdtar dentro de ciclos (IF/FOR/WHILE, etc....)
+//////////////////////
+void loop(){
+//Nota quando não existe dados para ler não necessito de esperar nada da consola 
+
+//Inicia o valor de maior e menor 
+maior = arr[0];
+menor = arr[0];
+soma = 0;
+
+//percorre o array para fazer a verificicação
+//Para percorrer um array precissamos fazer um ciclo for
+//i<n ou seja menor quer o numero de elementos do array;
+for(int i = 0; i <n; i++)
+{
+if(arr[i]> maior){
+//ele vai percorrer todo o array e o valor que será maio que zero mas o maior de todos será igual ao maior e ent~ão passará a ficar com esse valor
+maior = arr[i];
+}
+if(arr[i]< menor){
+menor =arr[i];
+}
+//Nota:soma += valor é equivalente a soma = soma + valor.
+soma += arr[i]; //soma os valores;
+}
+//Calcula a média dos valores 
+media = soma /n;
+
+print();
+}
+
+//----------------------------------------------------------------------
+/////////////////////////////////////////////////
+// Ficha Prática 1 - Revisões
+/////////////////////////////////////////////////
+
+/////////////////////////////////////////////////
+// Eduardo Miguel Moreira Junqueira nº30241 ERSC 
+/////////////////////////////////////////////////
+
+/////////////////////////////////////////////////
+// 2-Exercícios-Ex5:https://www.tinkercad.com/things/iicfj4fOz2X-ficha-1-ex5/editel?sharecode=PIbLw345yuoQWaePUPN1LVfNScCKVYAvvTxtDwo3Xjg
+/////////////////////////////////////////////////
+
+
+////////////////////////////////////////////////////////////////
+//EX:5
+//Exercício 5 Implemente um programa que implemente a seguinte operação e imprima o resultado na consola: soma = 1/1 + 3/2 + 5/3 + 7/4 + ... + 99/50
+//////////////////////////////////////////////////////////////////
+
+//Variáveis:
+float soma = 0.0;//Inicia a soma com valor 0
+int numerador = 1;
+int denominador = 1;
+
+
+//Funções void 
+//Somatório do numerador/denominador
+void somatorio(){
+ 
+while(numerador <= 99 && denominador <=50){
+//Nota:soma += valor é equivalente a soma = soma + valor.
+soma += (float)numerador / denominador;//Soma cada termo da série
+//numerador encrementa de 2 em 2 
+numerador += 2; //encrementa o numerador de 2 em 2 (1,3,5,...);
+denominador += 1;//encrementa o denominador de 1 em 1(1,2,3,4...);
+
+}
+  //Exibe o resultado na consola:
+Serial.println("O resultado do somatorio = ");
+Serial.print(soma);
+}
+
+//Setup inicialitaciton
+void setup(){
+Serial.begin(9600);
+Serial.println("In setup Fuction! ");
+Serial.println("Soma da  operação: soma = 1/1 + 3/2 + 5/3 + 7/4 + ... + 99/50: ");
+
+}
+
+//Loop 
+void loop(){
+somatorio();
+delay(10000);
+}
+
+//----------------------------------------------------------------------
+/////////////////////////////////////////////////
+// Ficha Prática 1 - Revisões
+/////////////////////////////////////////////////
+
+/////////////////////////////////////////////////
+// Eduardo Miguel Moreira Junqueira nº30241 ERSC 
+/////////////////////////////////////////////////
+
+/////////////////////////////////////////////////
+// 2-Exercícios-Ex6:https://www.tinkercad.com/things/gf7IW9qrlmV-copy-of-fp1-embedded-c-programming/editel?sharecode=Hdf2TzvnEm19EzHL7UEGwJI51ZkpCadSfYBeJV2a3a4
+/////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////
+//EX:6
+//Exercício 6 Implemente um programa que teste se um número inteiro previamente introduzido pelo utilizador (x) é ou não primo e imprima o resultado na consola. A solução deverá contemplar a implementação de uma função que devolva um char com o resultado (0 se o número é primo e 1 se não é primo) de acordo com o seguinte protótipo:
+//char testaPrimo(int x);
+//NOTA: Um número primo tem apenas 2 divisores inteiros: 1 e ele próprio.
+//////////////////////////////////////////////////////////////////
+
+int num; // Número inserido pelo utilizador
+
+// Função que testa se um número é primo
+char testaPrimo(int num) {
+    // Números menores que 2 não são primos
+    if (num < 2) {
+        return 1; // Não é primo
+    }
+
+    // Verificar se o número tem divisores além de 1 e ele mesmo
+    for (int i = 2; i <= num / 2; i++) {
+        if (num % i == 0) {
+            return 1; // Não é primo
+        }
+    }
+
+    return 0; // É primo
+}
+
+/////////////////////////////////////////////////
+// Função Setup - Inicialização
+/////////////////////////////////////////////////
+void setup() {	
+  Serial.begin(9600);
+  Serial.println("In setup function");  
+  Serial.println("Insira um numero inteiro. O programa verifica se e primo (0 = primo, 1 = nao primo).");
+}
+
+/////////////////////////////////////////////////
+// Função Loop - Loop de controlo
+/////////////////////////////////////////////////
+void loop() {	
+  // Verificar se há dados disponíveis na porta serial
+  if (Serial.available() > 0) {
+    // Ler o número inserido pelo utilizador
+    num = Serial.parseInt();
+
+    // Verificar se o número é positivo ou negativo
+    if (num >= 0) {
+      Serial.print("O numero ");
+      Serial.print(num);
+      Serial.println(" e positivo.");
+
+      // Testar se o número é primo
+      char resultado = testaPrimo(num);
+      
+      if (resultado == 0) {
+        Serial.print("O numero ");
+        Serial.print(num);
+        Serial.println(" e primo.");
+      } else {
+        Serial.print("O numero ");
+        Serial.print(num);
+        Serial.println(" nao e primo.");
+      }
+      
+      // Pedir um novo número
+      Serial.println("Digite outro numero inteiro:");
+      
+    } else {
+      Serial.print("O numero ");
+      Serial.print(num);
+      Serial.println(" e negativo.");
+
+      // Pedir um novo número
+      Serial.println("Digite outro numero inteiro:");
+    }
+  }
+}
+
+//----------------------------------------------------------------------
+/////////////////////////////////////////////////
+// Ficha Prática 1 - Revisões
+/////////////////////////////////////////////////
+
+/////////////////////////////////////////////////
+// Eduardo Miguel Moreira Junqueira nº30241 ERSC 
+/////////////////////////////////////////////////
+
+/////////////////////////////////////////////////
+// 2-Exercícios-Ex7:https://www.tinkercad.com/things/0fi7Q4h6z3O-copy-of-fp1-embedded-c-programming/editel?sharecode=SoROSWhlEjQ0D2KK2GZ474Ve-6bO9LOan8Dmn90wGm8
+/////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////
+//EX:7
+//Exercício 7 Implemente um programa que calcule o fatorial de um número inteiro previamente introduzido pelo utilizador e imprima o resultado na consola. O calculo do fatorial deve ser feito com recurso a uma função que recebe um parâmetro de entrada (n) e devolve um inteiro com o resultado da operação, de acordo com o seguinte protótipo:
+//long factorial(int n);
+//////////////////////////////////////////////////////////////////
+
+
+int numero; // Variável de número inteiro introduzido pelo utilizador
+bool calculado = false; // Variável de controle para garantir que o fatorial seja calculado apenas uma vez
+
+// Função que calcula o fatorial de um número
+long factorial(int n) {
+  long resultado = 1; // Inicializa o resultado como 1
+
+  // Calcula o fatorial de n
+  for (int i = 1; i <= n; i++) {
+    resultado *= i;
+  }
+
+  return resultado; // Retorna o fatorial
+}
+
+/////////////////////////////////////////////////
+// Função Setup - Inicialização
+/////////////////////////////////////////////////
+void setup() {	
+  Serial.begin(9600);
+  Serial.println("In setup function");
+  Serial.println("Introduza um numero para calcular o fatorial:");
+}
+
+/////////////////////////////////////////////////
+// Função Loop - Loop de controlo
+/////////////////////////////////////////////////
+void loop() {
+  // Verificar se há dados disponíveis para ler o número do utilizador
+  if (Serial.available() > 0 && !calculado) {
+    // Ler o número inserido pelo utilizador
+    numero = Serial.parseInt();
+
+     // Verificar se o número é não-negativo
+    if (numero >= 0) {
+      // Calcula o fatorial usando a função factorial
+      long resultado = factorial(numero);
+
+      // Exibe o resultado do fatorial
+      Serial.print("O fatorial de ");
+      Serial.print(numero);
+      Serial.print(" = ");
+      Serial.println(resultado);
+
+      // Pedir um novo número
+      Serial.println("Introduza outro numero para calcular o fatorial:");
+    } else {
+      // Mensagem para número negativo
+      Serial.println("O fatorial não e definido para numeros negativos. Introduza outro numero:");
+    }
+  }
+
+  // Ciclo for para garantir que o Arduino continua pedindo números
+  for (int i = 0; i < 1; i++) {
+    // Esse ciclo for permite que o loop continue executando e verificando novos números
+    // sem a necessidade de uma variável de controle como 'calculado'.
+  }
+}
+
+//----------------------------------------------------------------------
+
+/////////////////////////////////////////////////
+// Ficha Prática 1 - Revisões
+/////////////////////////////////////////////////
+
+/////////////////////////////////////////////////
+// Eduardo Miguel Moreira Junqueira nº30241 ERSC 
+/////////////////////////////////////////////////
+
+/////////////////////////////////////////////////
+// 2-Exercícios-Ex8:https://www.tinkercad.com/things/c2ONbPXdVI8-ficha-1-ex-8/editel?sharecode=M3GBcgjMLDVizkCT664bgNCTEDfg0-opSUUnn3OgxHk
+/////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////
+//EX:8
+//Exercício 8 Implemente um programa que obtenha do teclado o valor N e imprima na tela os N primeiros termos de uma sequência de Fibonacci. Crie para o efeito uma função chamada Fibonacci que recebe o número N.
+//NOTA: se o utilizador introduzir o número 10, a sequência deverá ser: 0 1 1 2 3 5 8 13 21 34.
+//////////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////
+// Ficha Prática 1 - Revisões
+/////////////////////////////////////////////////
+
+/////////////////////////////////////////////////
+// Eduardo Miguel Moreira Junqueira nº30241 ERSC 
+/////////////////////////////////////////////////
+
+/////////////////////////////////////////////////
+// 2-Exercícios-Ex8:https://www.tinkercad.com/things/c2ONbPXdVI8-ficha-1-ex-8/editel?sharecode=M3GBcgjMLDVizkCT664bgNCTEDfg0-opSUUnn3OgxHk
+/////////////////////////////////////////////////
+
+/////////////////////////////////////////////////
+//sequência de Fibonacci -->o 1ºtermo =0 2ºtermo=1 A partir do 3ºtermo em diante, cada termo é a soma dos dois anteriores.
+//esta sequência irá imprimir os N primeiros termos da sequência que será pedido ao tulizador: por exemplo:10 primeiros termos da sequência de Fibonacci
+/////////////////////////////////////////////////
+
+int N;	// define uma variável global do tipo inteira para os N primeiros numeros da sequência
+ // Inicializa os dois primeiros termos da sequência
+int t1 = 0;// 1ºtermo da sequência
+int t2 = 1;//2ºtermo da sequência
+int proximoTermo; //Próximo termo da sequência
+
+void Fibonacci(int N) {
+    // Reinicializa os dois primeiros termos da sequência toda vez que a função é chamada
+    int t1 = 0; // Primeiro termo
+    int t2 = 1; // Segundo termo
+    int proximoTermo; // Próximo termo da sequência
+  
+  Serial.print("Sequencia de Fibonacci com: ");
+  Serial.print(N);
+  Serial.print(" termos: ");
+
+    for (int i = 1; i <= N; i++) {
+        if (i == 1) {
+          	Serial.print(t1);
+            continue;
+        }
+        if (i == 2) {
+           Serial.print(t2);
+            continue;
+        }
+        proximoTermo = t1 + t2; // Calcula o próximo termo
+       Serial.print(proximoTermo);
+
+        // Atualiza os valores de t1 e t2
+        t1 = t2;
+        t2 = proximoTermo;
+    }
+   Serial.println("");
+}
+  
+/////////////////////////////////////////////////
+// Função Setup - Inicialização
+/////////////////////////////////////////////////
+void setup() {	
+  Serial.begin(9600);
+  Serial.println("In setup function");
+  Serial.println("Introduz os N termos para a realizacao de uma sequencia de Fibonacci: ");
+}
+
+/////////////////////////////////////////////////
+// Função Loop - Loop de controlo
+/////////////////////////////////////////////////
+void loop() {	
+  
+  // Verificar se há dados disponíveis para ler o número N
+  if (Serial.available() > 0) {
+    // Lê o valor de N do monitor serial
+    N = Serial.parseInt();
+
+    // Verificar se o valor de N é positivo
+    if (N <= 0) {
+        Serial.println("Por favor, insira um numero maior que 0.");
+    } else {
+        // Chama a função Fibonacci para imprimir os termos
+        Fibonacci(N);
+
+        // Pedir um novo número
+        Serial.println("Introduza o numero de termos para a sequencia de Fibonacci: ");
+    }
+  }
+}
+
+//----------------------------------------------------------------------
+
+/////////////////////////////////////////////////
+// Ficha Prática 1 - Revisões
+/////////////////////////////////////////////////
+
+/////////////////////////////////////////////////
+// Eduardo Miguel Moreira Junqueira nº30241 ERSC 
+/////////////////////////////////////////////////
+
+/////////////////////////////////////////////////
+// 2-Exercícios-Ex9:https://www.tinkercad.com/things/1gyULVvvKmJ-ficha-1-ex9/editel?sharecode=3UtB3Nqe6bFNgxmDng4NMwhQttjIY5_G43IqDq-1kC0
+/////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////
+//EX:9
+//Exercício 9 Implemente um programa que permita ao utilizador introduzir e armazenar num array as notas de uma prova de avaliação de uma turma de 10 alunos. No final deverá calcular e imprimir a média aritmética geral.
+//NOTA: Implemente uma função para introduzir as notas e outra para calcular a média.
+//////////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////
+// Ficha Prática 1 - Revisões
+/////////////////////////////////////////////////
+
+/////////////////////////////////////////////////
+// Eduardo Miguel Moreira Junqueira nº30241 ERSC 
+/////////////////////////////////////////////////
+
+/////////////////////////////////////////////////
+// 2-Exercícios-Ex9:https://www.tinkercad.com/things/1gyULVvvKmJ-ficha-1-ex9/editel?sharecode=3UtB3Nqe6bFNgxmDng4NMwhQttjIY5_G43IqDq-1kC0
+/////////////////////////////////////////////////
+const int TAMANHO_TURMA = 10; // Define o número de alunos
+
+// Função para introduzir as notas no array
+void introduzirNotas(float notas[]) {
+    for (int i = 0; i < TAMANHO_TURMA; i++) {
+        Serial.print("Introduza a nota do aluno ");
+        Serial.print(i + 1);
+        Serial.println(":");
+
+        // Aguarda a introdução de uma nota válida
+        while (Serial.available() == 0) {
+            // Espera a entrada do usuário
+        }
+        
+        // Lê a nota como float
+        notas[i] = Serial.parseFloat(); 
+
+        // Verifica se a nota está entre 0 e 20
+        while (notas[i] < 0 || notas[i] > 20) {
+            Serial.println("Nota invalida. Introduza uma nota entre 0 e 20:");
+
+            // Aguarda nova entrada
+            while (Serial.available() == 0) {
+                // Espera a entrada do usuário
+            }
+            notas[i] = Serial.parseFloat(); // Lê a nova nota
+        }
+
+        // Imprime a nota inserida
+        Serial.print("Nota do aluno ");
+        Serial.print(i + 1);
+        Serial.print(" = ");
+        Serial.println(notas[i]);
+
+        // Espera 1 segundo antes de permitir a introdução da próxima nota
+        delay(1000);
+    }
+}
+
+// Função para calcular a média das notas
+float calcularMedia(float notas[]) {
+    float soma = 0.0;//variavel soma das notas
+
+    for (int i = 0; i < TAMANHO_TURMA; i++) {
+        soma += notas[i];
+    }
+
+    return soma / TAMANHO_TURMA; // Calcula a média
+}
+
+/////////////////////////////////////////////////
+// Função Setup - Inicialização
+/////////////////////////////////////////////////
+void setup() {	
+  Serial.begin(9600);
+  Serial.println("In setup function");
+  Serial.println(" Introduza as notas da turma:");
+}
+
+/////////////////////////////////////////////////
+// Função Loop - Loop de controlo
+/////////////////////////////////////////////////
+void loop() {	
+ float notas[TAMANHO_TURMA]; // Array para armazenar as notas
+
+    // Chama a função para introduzir as notas
+    introduzirNotas(notas);
+
+    // Calcula a média e imprime o resultado
+    float media = calcularMedia(notas);
+    Serial.print("A media aritmetica geral = ");
+    Serial.print(media);
+  // Espera um pouco antes de permitir nova execução
+    delay(5000); // 5 segundos de espera antes de reiniciar o processo
+}
+
+//----------------------------------------------------------------------
+
+/////////////////////////////////////////////////
+// Ficha Prática 1 - Revisões
+/////////////////////////////////////////////////
+
+/////////////////////////////////////////////////
+// Eduardo Miguel Moreira Junqueira nº30241 ERSC 
+/////////////////////////////////////////////////
+
+/////////////////////////////////////////////////
+// 2-Exercícios-Ex10:https://www.tinkercad.com/things/ayCivT62sws-ficha-1-ex-10/editel?sharecode=6Co5d8i69eLiSTZPwrE_zN2HHlRN6M_tzfmIdyR23ts
+/////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////
+//EX:10
+//Exercício 10 Implemente um programa que solicite ao utilizador 10 números inteiros e que no fim imprima na consola: número de elementos pares, número de elementos ímpares, número de elementos positivos e número de elementos negativos.
+//////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////
+// Ficha Prática 1 - Revisões
+/////////////////////////////////////////////////
+
+/////////////////////////////////////////////////
+// Eduardo Miguel Moreira Junqueira nº30241 ERSC 
+/////////////////////////////////////////////////
+
+/////////////////////////////////////////////////
+// 2-Exercícios-Ex10:https://www.tinkercad.com/things/ayCivT62sws-ficha-1-ex-10/editel?sharecode=6Co5d8i69eLiSTZPwrE_zN2HHlRN6M_tzfmIdyR23ts
+/////////////////////////////////////////////////
+
+///////////////////////////////////////////////////
+//Implemente um programa que solicite ao utilizador 10 números inteiros 
+//e que no fim imprima na consola: número de elementos pares, 
+//número de elementos ímpares, número de elementos positivos e 
+//número de elementos negativos.
+//
+///////////////////////////////////////////////////
+//Variáveis Iniciais 
+const int tamanho = 10;
+long N[tamanho];  // Array para armazenar os 10 números
+int contador = 0; // Contador de números inseridos
+
+//Funções de operações:
+void NumPositivos(){
+  //Se >0 numeros positivos
+  Serial.print(" Numeros Positivos: ");
+  bool primeiroNumero = true;  // Variável para controlar a separação
+  for (int i = 0; i < tamanho; i++) {
+    if (N[i] > 0) {
+       if (!primeiroNumero) {
+        Serial.print("; ");  // Adiciona "; " após o primeiro número
+      }
+   Serial.print(N[i]);
+      primeiroNumero = false;
+    }
+  }
+  
+}
+
+void NumNegativos(){
+  //Se <0 numeros negativos
+  Serial.print(" Numeros Negativos: ");
+  bool primeiroNumero = true;  // Variável para controlar a separação
+  for(int i = 0; i < tamanho; i++){
+    if(N[i] < 0){
+       if (!primeiroNumero) {
+        Serial.print("; ");  // Adiciona "; " após o primeiro número
+      }
+   Serial.print(N[i]);
+      primeiroNumero = false;
+  }
+    
+  }
+  
+}
+
+void NumPares(){
+  //Se o resto da divisão /2 = 0 é par
+  Serial.print(" Numeros Pares: ");
+  bool primeiroNumero = true;  // Variável para controlar a separação
+  for(int i = 0; i < tamanho; i++){
+    if(N[i]% 2 == 0 ){
+       if (!primeiroNumero) {
+        Serial.print("; ");  // Adiciona "; " após o primeiro número
+      }
+      Serial.print(N[i]);
+      primeiroNumero = false;
+    }
+  }
+ 
+}
+
+void NumImpares(){
+  //Se o resto  da divisão /2 ! 0 é impar
+  Serial.print(" Numeros Impares: ");
+  bool primeiroNumero = true;  // Variável para controlar a separação
+  for(int i = 0; i < tamanho; i++){
+    if(N[i] % 2 != 0 ){
+       if (!primeiroNumero) {
+        Serial.print("; ");  // Adiciona "; " após o primeiro número
+      }
+      Serial.print(N[i]);
+    primeiroNumero = false;
+    }
+  }
+  
+}
+  
+/////////////////////////////////////////////////
+// Função Setup - Inicialização
+/////////////////////////////////////////////////
+                
+void setup() {	
+  Serial.begin(9600);
+  Serial.println("In setup function");
+ Serial.println(" Por favor, insira 10 numeros inteiros, um de cada vez: ");
+  
+}
+
+/////////////////////////////////////////////////
+// Função Loop - Loop de controlo
+/////////////////////////////////////////////////
+                
+void loop() {	
+   // Verifica se já inserimos os 10 números
+  if (contador < tamanho) {
+    // Verifica se há dados disponíveis no serial
+    if (Serial.available() > 0) {
+      // Lê o número inserido e armazena no array N
+      N[contador] = Serial.parseInt();
+      Serial.print(" Numero inserido: ");
+      Serial.println(N[contador]); // Imprime o número lido
+      
+      contador++; // Incrementa o contador de números inseridos
+
+      // Pede o próximo número
+      if (contador < tamanho) {
+        Serial.print(" Insira o  seguinte numero: ");
+        Serial.print(contador + 1);
+        Serial.println(": ");
+      }
+    }
+  }
+  
+  // Se já inseriu 10 números, imprime os resultados
+  if (contador == tamanho) {
+    // Chamar as funções para imprimir os números em cada categoria
+    NumPares();
+    NumImpares();
+    NumPositivos();
+    NumNegativos();
+    
+    // Reinicia o contador para permitir uma nova inserção após o delay
+    contador = 0;
+    delay(20000); // 10 segundos de delay antes de iniciar uma nova rodada
+    Serial.println("Por favor, insira 10 numeros inteiros, um de cada vez: ");
+  }
+}
+//----------------------------------------------------------------------
+
+
+
+/////////////////////////////////////////////////
+// Ficha Prática 1 - Revisões
+/////////////////////////////////////////////////
+
+/////////////////////////////////////////////////
+// Eduardo Miguel Moreira Junqueira nº30241 ERSC 
+/////////////////////////////////////////////////
+
+/////////////////////////////////////////////////
+// 2-Exercícios-Ex11:https://www.tinkercad.com/things/edmwHkK1zu8-ficha-1-ex-11/editel?sharecode=2dQtGqAoQO7I20uuaKya3ob3kv9Qn1OwFrMW99BUCbE
+/////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////
+//EX:11
+//Exercício 11 Implemente um programa que solicite ao utilizador uma palavra e uma letra e que imprima na consola o número de vezes que a letra é usada na palavra.
+//////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////
+//Implemente um programa que solicite ao utilizador 
+//uma palavra e uma letra e que imprima na consola o 
+//número de vezes que a letra é usada na palavra.
+/////////////////////////////////////////////////////
+
+//Array para a palavra
+char palavra[20];  // Define um array com até 20 caracteres para armazenar a palavra
+char letra;  // Variável para armazenar a letra que será contada
+int cnt = 0;  // Variável para contar quantas vezes a letra aparece na palavra
+ 
+//Criar uma função que percorra a palavra e conte quantas vezes a letra aparece.
+void CntLetra(){
+  
+  cnt = 0;  // Reinicializa o contador
+  
+  for (int i = 0; palavra[i] != '\0'; i++) {  // Percorre cada caractere da palavra
+    if (palavra[i] == letra) {  // Se o caractere for igual à letra que estamos procurando
+      cnt++;  // Incrementa o contador
+    }
+  }
+    // Imprime o resultado
+  Serial.print("A letra '");
+  Serial.print(letra);
+  Serial.print("' aparece ");
+  Serial.print(cnt);
+  Serial.println(" vez(es) na palavra.");
+}
+/////////////////////////////////////////////////
+// Função Setup - Inicialização
+/////////////////////////////////////////////////
+void setup() {	
+  Serial.begin(9600);
+  Serial.println("In setup function");
+  //Indicar que o utilizador insira uma palavra.
+  Serial.println("Porfavor introduza uma palavra: ");
+}
+
+/////////////////////////////////////////////////
+// Função Loop - Loop de controlo
+/////////////////////////////////////////////////
+void loop() {	
+  // Verifica se há dados disponíveis no serial para ler a palavra
+  if (Serial.available() > 0) {
+    //ler a Palavra
+    Serial.readBytesUntil('\n', palavra, sizeof(palavra));  // Lê até 20 caracteres ou até encontrar o caractere de nova linha
+
+    Serial.print("Palavra inserida: ");
+    Serial.println(palavra);  // Imprime a palavra inserida
+    
+     // Solicita a letra que será contada
+    Serial.println("Agora, introduza a letra que deseja contar na palavra: ");
+    
+    // Aguarda a inserção da letra
+    while (Serial.available() == 0) {
+      // Espera o utilizador inserir uma letra
+    }
+    
+    letra = Serial.read();  // Lê a letra que será contada
+    
+    //Imprimir o resultado na consola.
+  CntLetra();
+    
+     // Espera um tempo antes de permitir outra execução
+    delay(5000);  // 5 segundos de delay antes de reiniciar
+    Serial.println("\nPor favor, introduza uma nova palavra: ");  // Solicita uma nova palavra
+}
+}
+//___________________________________________________________________
+  
